@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ownership and Land Transfer Agreement</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=Public+Sans:wght@400;600&display=swap">
+<style>
+:root{--bg:#e9ece8;--paper:#fbfcfa;--ink:#1d2a24;--muted:#5b6a62;--line:#c5cdc6;--accent:#2f6b4f;--accent-ink:#fff;--err:#a3321f;--sig:#1b3a6b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a17;--paper:#1c2420;--ink:#e6ece8;--muted:#9aa9a0;--line:#34423a;--accent:#5fb98a;--accent-ink:#0d1a13;--err:#ff8a73;--sig:#8fb4ff}}
+:root[data-theme="dark"]{--bg:#141a17;--paper:#1c2420;--ink:#e6ece8;--muted:#9aa9a0;--line:#34423a;--accent:#5fb98a;--accent-ink:#0d1a13;--err:#ff8a73;--sig:#8fb4ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Public Sans",system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:24px 20px}
+h1{font:700 1.5rem/1.2 Bitter,Georgia,serif;text-align:center;margin:0 0 18px}
+.clause{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:12px 4px;margin:0 0 22px;font-family:Bitter,Georgia,serif;font-size:.95rem;text-align:center}
+.clause p{margin:6px 0}
+h2{font:700 1.05rem Bitter,Georgia,serif;margin:26px 0 4px}
+.hint{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+label{display:block;font-weight:600;font-size:.88rem;margin:12px 0 4px}
+input,select{width:100%;font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:4px;padding:10px;min-height:44px}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+input.sign{font-family:"Brush Script MT","Segoe Script",cursive;font-size:1.5rem;color:var(--sig);border-style:dashed}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.xyz{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.divider{border:0;border-top:2px solid var(--ink);margin:28px 0 0}
+.bad{border-color:var(--err)}
+.msg{color:var(--err);font-size:.85rem;min-height:1.2em;margin:6px 0 0}
+.agree{display:flex;gap:10px;align-items:flex-start;margin-top:18px;font-weight:400}
+.agree input{width:22px;min-height:22px;margin-top:2px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+button{font:600 1rem "Public Sans",sans-serif;min-height:46px;padding:0 18px;border-radius:4px;border:1px solid var(--accent);cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+button.alt{background:transparent;color:var(--accent)}
+#out{display:none;margin-top:24px;border-top:2px solid var(--ink);padding-top:16px}
+#out pre{white-space:pre-wrap;word-break:break-word;font:.9rem/1.6 ui-monospace,Menlo,Consolas,monospace;background:transparent;margin:0;padding:12px;border:1px solid var(--line);border-radius:4px}
+.ok{color:var(--accent);font-weight:600;min-height:1.4em}
+@media print{body{background:#fff}.sheet{border:0}.btns,.agree,.hint,#form{display:none}#out{display:block!important}:root{--ink:#000;--paper:#fff;--line:#999}}
+</style>
+</head>
+<body>
+<main>
+<div class="sheet">
+<h1>Ownership and Land Transfer Agreement</h1>
+<div class="clause">
+<p>By signing this document, I grant the bearer of this contract the right to own, modify, build on and inhabit this property in the jurisdiction of the Farzaneh government.</p>
+<p>As the bearer, I agree to follow all local and federal laws set by the Farzaneh government.</p>
+</div>
+
+<div id="form">
+<h2>Seller (current landowner)</h2>
+<p class="hint">The player handing over the land.</p>
+<div class="row">
+<div><label for="sn">First name</label><input id="sn" autocomplete="off"></div>
+<div><label for="sl">Last name</label><input id="sl" autocomplete="off"></div>
+</div>
+<label for="sid">Player ID</label><input id="sid" autocomplete="off" placeholder="In-game username">
+
+<label>Land corner 1 (x, y, z)</label>
+<div class="xyz">
+<input id="x" type="number" inputmode="numeric" placeholder="x1" aria-label="corner 1 x">
+<input id="y" type="number" inputmode="numeric" placeholder="y1" aria-label="corner 1 y">
+<input id="z" type="number" inputmode="numeric" placeholder="z1" aria-label="corner 1 z">
+</div>
+<label>Land corner 2 (x, y, z)</label>
+<div class="xyz">
+<input id="x2" type="number" inputmode="numeric" placeholder="x2" aria-label="corner 2 x">
+<input id="y2" type="number" inputmode="numeric" placeholder="y2" aria-label="corner 2 y">
+<input id="z2" type="number" inputmode="numeric" placeholder="z2" aria-label="corner 2 z">
+</div>
+<p class="hint" id="area" style="margin-top:6px">Use two opposite corners of the claim. The size is worked out for you.</p>
+<label for="dim">Dimension</label>
+<select id="dim"><option>Overworld</option><option>Nether</option><option>The End</option></select>
+<label for="price">Price or payment (optional)</label><input id="price" placeholder="e.g. 32 diamonds">
+<label for="ss">Seller signature</label><input id="ss" class="sign" placeholder="Type your full name" autocomplete="off">
+
+<hr class="divider">
+<h2>Bearer (new landowner)</h2>
+<p class="hint">The player receiving the land.</p>
+<div class="row">
+<div><label for="bn">First name</label><input id="bn" autocomplete="off"></div>
+<div><label for="bl">Last name</label><input id="bl" autocomplete="off"></div>
+</div>
+<label for="bid">Player ID</label><input id="bid" autocomplete="off" placeholder="In-game username">
+<label for="bs">Bearer signature</label><input id="bs" class="sign" placeholder="Type your full name" autocomplete="off">
+
+<label class="agree"><input type="checkbox" id="ag"><span>Both parties confirm the details above are correct and agree to the terms of this agreement.</span></label>
+<p class="msg" id="msg" role="alert"></p>
+<div class="btns"><button id="go" type="button">Create agreement</button><button id="rs" type="button" class="alt">Clear form</button></div>
+</div>
+
+<div id="out">
+<h2 style="margin-top:0">Signed agreement</h2>
+<pre id="txt"></pre>
+<div class="btns"><button id="cp" type="button">Copy to send</button><button id="pr" type="button" class="alt">Print or save PDF</button><button id="ed" type="button" class="alt">Edit</button></div>
+<p class="ok" id="ok" role="status"></p>
+</div>
+</div>
+</main>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var req=["sn","sl","sid","x","y","z","x2","y2","z2","ss","bn","bl","bid","bs"];
+var all=req.concat(["dim","price"]);
+function dims(){var r=[];[["x","x2"],["y","y2"],["z","z2"]].forEach(function(p){var a=$(p[0]).value,b=$(p[1]).value;r.push(a===""||b===""?null:Math.abs(+a-+b)+1)});return r}
+function area(){var d=dims(),e=$("area");if(d.indexOf(null)>-1){e.textContent="Use two opposite corners of the claim. The size is worked out for you.";return}e.textContent="Size: "+d[0]+" x "+d[1]+" x "+d[2]+" blocks ("+(d[0]*d[1]*d[2]).toLocaleString()+" total)"}
+["x","y","z","x2","y2","z2"].forEach(function(i){$(i).addEventListener("input",area)});
+function build(){
+var d=new Date().toISOString().slice(0,10);
+var v=function(i){return $(i).value.trim()};
+var L=["OWNERSHIP AND LAND TRANSFER AGREEMENT","","By signing this document, the seller grants the bearer the right to own,","modify, build on and inhabit this property in the jurisdiction of the","Farzaneh government. The bearer agrees to follow all local and federal","laws set by the Farzaneh government.","",
+"SELLER","Name: "+v("sn")+" "+v("sl"),"Player ID: "+v("sid"),
+"Land corner 1 (x y z): "+v("x")+" "+v("y")+" "+v("z"),"Land corner 2 (x y z): "+v("x2")+" "+v("y2")+" "+v("z2"),"Dimension: "+$("dim").value,"Land size: "+dims().join(" x ")+" blocks"];
+if(v("price"))L.push("Price/payment: "+v("price"));
+L.push("Signature: "+v("ss"),"","BEARER","Name: "+v("bn")+" "+v("bl"),"Player ID: "+v("bid"),"Signature: "+v("bs"),"","Date: "+d);
+return L.join("\n");}
+$("go").onclick=function(){
+var bad=0;
+all.forEach(function(i){$(i).classList.remove("bad")});
+req.forEach(function(i){if(!$(i).value.trim()){$(i).classList.add("bad");bad++}});
+var m=$("msg");
+if(bad){m.textContent="Fill in the "+bad+" highlighted field"+(bad>1?"s":"")+".";return}
+if(!$("ag").checked){m.textContent="Tick the confirmation box to continue.";return}
+m.textContent="";
+$("txt").textContent=build();
+$("form").style.display="none";$("out").style.display="block";$("ok").textContent="";
+window.scrollTo(0,0);};
+$("ed").onclick=function(){$("out").style.display="none";$("form").style.display="block"};
+$("rs").onclick=function(){all.forEach(function(i){var e=$(i);if(e.tagName!=="SELECT")e.value="";e.classList.remove("bad")});$("ag").checked=false;$("msg").textContent="";area()};
+$("cp").onclick=function(){
+var t=$("txt").textContent;
+function done(){$("ok").textContent="Copied. Paste it into Discord or chat."}
+try{navigator.clipboard.writeText(t).then(done,fallback)}catch(e){fallback()}
+function fallback(){try{var r=document.createRange();r.selectNodeContents($("txt"));var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand("copy");done()}catch(e){$("ok").textContent="Press and hold the text to copy it."}}};
+$("pr").onclick=function(){try{window.print()}catch(e){$("ok").textContent="Printing is not available here. Use Copy instead."}};
+})();
+</script>
+</body>
+</html>
