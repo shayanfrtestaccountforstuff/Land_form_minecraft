@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ownership and Land Transfer Agreement</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=Public+Sans:wght@400;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--bg:#e9ece8;--paper:#fbfcfa;--ink:#1d2a24;--muted:#5b6a62;--line:#c5cdc6;--accent:#2f6b4f;--accent-ink:#fff;--err:#a3321f;--sig:#1b3a6b;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -12,21 +13,21 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 :root[data-theme="dark"]{--bg:#141a17;--paper:#1c2420;--ink:#e6ece8;--muted:#9aa9a0;--line:#34423a;--accent:#5fb98a;--accent-ink:#0d1a13;--err:#ff8a73;--sig:#8fb4ff}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Public Sans",system-ui,sans-serif}
 main{max-width:640px;margin:0 auto;padding:16px}
 .sheet{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:24px 20px}
 h1{font:700 1.5rem/1.2 Bitter,Georgia,serif;text-align:center;margin:0 0 18px}
 .clause{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:12px 4px;margin:0 0 22px;font-family:Bitter,Georgia,serif;font-size:.95rem;text-align:center}
 .clause p{margin:6px 0}
-h2{font:700 1.05rem Bitter,Georgia,serif;margin:26px 0 4px}
+h2{font:700 1.05rem Bitter,Georgia,serif;margin:22px 0 4px}
 .hint{color:var(--muted);font-size:.85rem;margin:0 0 12px}
 label{display:block;font-weight:600;font-size:.88rem;margin:12px 0 4px}
-input,select{width:100%;font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:4px;padding:10px;min-height:44px}
-input:focus,select:focus,button:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:4px;padding:10px;min-height:44px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 input.sign{font-family:"Brush Script MT","Segoe Script",cursive;font-size:1.5rem;color:var(--sig);border-style:dashed}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .xyz{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.divider{border:0;border-top:2px solid var(--ink);margin:28px 0 0}
 .bad{border-color:var(--err)}
 .msg{color:var(--err);font-size:.85rem;min-height:1.2em;margin:6px 0 0}
 .agree{display:flex;gap:10px;align-items:flex-start;margin-top:18px;font-weight:400}
@@ -34,107 +35,241 @@ input.sign{font-family:"Brush Script MT","Segoe Script",cursive;font-size:1.5rem
 .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
 button{font:600 1rem "Public Sans",sans-serif;min-height:46px;padding:0 18px;border-radius:4px;border:1px solid var(--accent);cursor:pointer;background:var(--accent);color:var(--accent-ink)}
 button.alt{background:transparent;color:var(--accent)}
-#out{display:none;margin-top:24px;border-top:2px solid var(--ink);padding-top:16px}
-#out pre{white-space:pre-wrap;word-break:break-word;font:.9rem/1.6 ui-monospace,Menlo,Consolas,monospace;background:transparent;margin:0;padding:12px;border:1px solid var(--line);border-radius:4px}
+button.choice{display:block;width:100%;text-align:left;padding:14px 16px;margin-top:12px;min-height:0}
+button.choice small{display:block;font-weight:400;opacity:.85}
+pre{white-space:pre-wrap;word-break:break-word;font:.9rem/1.6 ui-monospace,Menlo,Consolas,monospace;margin:0;padding:12px;border:1px solid var(--line);border-radius:4px}
 .ok{color:var(--accent);font-weight:600;min-height:1.4em}
-@media print{body{background:#fff}.sheet{border:0}.btns,.agree,.hint,#form{display:none}#out{display:block!important}:root{--ink:#000;--paper:#fff;--line:#999}}
+.steps{margin:0;padding-left:20px;font-size:.92rem}
+.card{border:1px solid var(--line);border-radius:4px;padding:12px;margin-top:14px}
+.pay{display:flex;gap:10px;align-items:center;font-weight:400;margin:6px 0}
+.pay input{width:22px;min-height:22px}
+.late{color:var(--err);font-weight:600}
+a.btnlink{display:inline-flex;align-items:center;min-height:46px;padding:0 18px;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-weight:600;text-decoration:none}
 </style>
 </head>
 <body>
-<main>
-<div class="sheet">
+<main><div class="sheet">
 <h1>Ownership and Land Transfer Agreement</h1>
 <div class="clause">
 <p>By signing this document, I grant the bearer of this contract the right to own, modify, build on and inhabit this property in the jurisdiction of the Farzaneh government.</p>
 <p>As the bearer, I agree to follow all local and federal laws set by the Farzaneh government.</p>
+<p>The bearer also agrees to pay the price on the dates in the payment schedule.</p>
 </div>
 
-<div id="form">
+<section id="home">
+<p class="hint">The seller and the buyer fill in their own parts, one after the other. Which are you?</p>
+<button class="choice" id="b-s" type="button">I'm the seller<small>Step 1: enter your details and the land, then send the offer to the buyer.</small></button>
+<button class="choice alt" id="b-b" type="button">I'm the buyer (bearer)<small>Step 2: paste the seller's offer, add your details and accept.</small></button>
+<button class="choice alt" id="b-a" type="button">Admin: deal ledger<small>Track every purchase and its payments.</small></button>
+</section>
+
+<section id="sv" hidden>
 <h2>Seller (current landowner)</h2>
-<p class="hint">The player handing over the land.</p>
+<p class="hint">You do not need the buyer's details.</p>
 <div class="row">
-<div><label for="sn">First name</label><input id="sn" autocomplete="off"></div>
-<div><label for="sl">Last name</label><input id="sl" autocomplete="off"></div>
+<div><label for="sn">First name</label><input id="sn" maxlength="30" autocomplete="off"></div>
+<div><label for="sl">Last name</label><input id="sl" maxlength="30" autocomplete="off"></div>
 </div>
-<label for="sid">Player ID</label><input id="sid" autocomplete="off" placeholder="In-game username">
-
+<label for="sid">Player ID</label><input id="sid" maxlength="30" autocomplete="off" placeholder="In-game username">
 <label>Land corner 1 (x, y, z)</label>
-<div class="xyz">
-<input id="x" type="number" inputmode="numeric" placeholder="x1" aria-label="corner 1 x">
-<input id="y" type="number" inputmode="numeric" placeholder="y1" aria-label="corner 1 y">
-<input id="z" type="number" inputmode="numeric" placeholder="z1" aria-label="corner 1 z">
-</div>
+<div class="xyz"><input id="x" type="number" inputmode="numeric" placeholder="x1" aria-label="corner 1 x"><input id="y" type="number" inputmode="numeric" placeholder="y1" aria-label="corner 1 y"><input id="z" type="number" inputmode="numeric" placeholder="z1" aria-label="corner 1 z"></div>
 <label>Land corner 2 (x, y, z)</label>
-<div class="xyz">
-<input id="x2" type="number" inputmode="numeric" placeholder="x2" aria-label="corner 2 x">
-<input id="y2" type="number" inputmode="numeric" placeholder="y2" aria-label="corner 2 y">
-<input id="z2" type="number" inputmode="numeric" placeholder="z2" aria-label="corner 2 z">
-</div>
+<div class="xyz"><input id="x2" type="number" inputmode="numeric" placeholder="x2" aria-label="corner 2 x"><input id="y2" type="number" inputmode="numeric" placeholder="y2" aria-label="corner 2 y"><input id="z2" type="number" inputmode="numeric" placeholder="z2" aria-label="corner 2 z"></div>
 <p class="hint" id="area" style="margin-top:6px">Use two opposite corners of the claim. The size is worked out for you.</p>
 <label for="dim">Dimension</label>
 <select id="dim"><option>Overworld</option><option>Nether</option><option>The End</option></select>
-<label for="price">Price or payment (optional)</label><input id="price" placeholder="e.g. 32 diamonds">
-<label for="ss">Seller signature</label><input id="ss" class="sign" placeholder="Type your full name" autocomplete="off">
+<h2>Payment</h2>
+<p class="hint">Leave the price empty for a free transfer.</p>
+<div class="row"><div><label for="amt">Total price</label><input id="amt" type="number" min="1" step="1" inputmode="numeric" placeholder="e.g. 32"></div><div><label for="unit">Currency or item</label><input id="unit" maxlength="20" placeholder="e.g. diamonds"></div></div>
+<label for="plan">Payment plan</label><select id="plan"><option value="single">One payment</option><option value="inst">Split into installments</option></select>
+<div class="row"><div><label for="first" id="lfirst">Payment due date</label><input id="first" type="date"></div><div><label for="xfer">Land transfers</label><select id="xfer"><option value="now">On acceptance</option><option value="paid">After final payment</option></select></div></div>
+<div class="row" id="iw" hidden><div><label for="npay">Number of payments</label><input id="npay" type="number" min="2" max="30" inputmode="numeric" placeholder="e.g. 4"></div><div><label for="gap">Days between payments</label><input id="gap" type="number" min="1" max="90" inputmode="numeric" placeholder="e.g. 7"></div></div>
+<label>Schedule preview</label><pre id="prev"></pre>
+<label for="ss">Seller signature</label><input id="ss" class="sign" maxlength="40" placeholder="Type your full name" autocomplete="off">
+<label class="agree"><input type="checkbox" id="ag1"><span>I agree to the terms above and confirm these details are correct.</span></label>
+<p class="msg" id="m1" role="alert"></p>
+<div class="btns"><button id="mk" type="button">Create offer</button><button class="alt back" type="button">Back</button></div>
+</section>
 
-<hr class="divider">
-<h2>Bearer (new landowner)</h2>
-<p class="hint">The player receiving the land.</p>
+<section id="so" hidden>
+<h2>Offer ready</h2>
+<p class="hint">Send this whole message to the buyer on Telegram. Keep the code line, the buyer pastes it into the form.</p>
+<pre id="ocode"></pre>
+<div class="btns"><button id="co" type="button">Copy offer</button><button class="alt back" type="button">Done</button></div>
+<p class="ok" id="ok1" role="status"></p>
+</section>
+
+<section id="bv" hidden>
+<h2>Buyer (bearer)</h2>
+<label for="paste">Paste the seller's offer</label>
+<textarea id="paste" rows="4" placeholder="Paste the message that contains LANDOFFER:..."></textarea>
+<p class="msg" id="m2" role="alert"></p>
+<div class="btns"><button id="ld" type="button">Load offer</button><button class="alt back" type="button">Back</button></div>
+<div id="bf" hidden>
+<h2>Seller's offer</h2>
+<pre id="bsum"></pre>
+<h2>Your details</h2>
 <div class="row">
-<div><label for="bn">First name</label><input id="bn" autocomplete="off"></div>
-<div><label for="bl">Last name</label><input id="bl" autocomplete="off"></div>
+<div><label for="bn">First name</label><input id="bn" maxlength="30" autocomplete="off"></div>
+<div><label for="bl">Last name</label><input id="bl" maxlength="30" autocomplete="off"></div>
 </div>
-<label for="bid">Player ID</label><input id="bid" autocomplete="off" placeholder="In-game username">
-<label for="bs">Bearer signature</label><input id="bs" class="sign" placeholder="Type your full name" autocomplete="off">
-
-<label class="agree"><input type="checkbox" id="ag"><span>Both parties confirm the details above are correct and agree to the terms of this agreement.</span></label>
-<p class="msg" id="msg" role="alert"></p>
-<div class="btns"><button id="go" type="button">Create agreement</button><button id="rs" type="button" class="alt">Clear form</button></div>
+<label for="bid">Player ID</label><input id="bid" maxlength="30" autocomplete="off" placeholder="In-game username">
+<label for="bs">Bearer signature</label><input id="bs" class="sign" maxlength="40" placeholder="Type your full name" autocomplete="off">
+<label class="agree"><input type="checkbox" id="ag2"><span>I accept this offer, agree to the terms above and will follow all local and federal laws.</span></label>
+<p class="msg" id="m3" role="alert"></p>
+<div class="btns"><button id="ac" type="button">Accept and create agreement</button></div>
 </div>
+</section>
 
-<div id="out">
-<h2 style="margin-top:0">Signed agreement</h2>
+<section id="ad" hidden>
+<h2>Admin deal ledger</h2>
+<p class="hint">Paste final agreements, one or many. Deals are saved in this browser only, so keep the Telegram messages as your master record and use Copy backup now and then.</p>
+<textarea id="lp" rows="4" placeholder="Paste agreements containing LANDDEAL:..."></textarea>
+<p class="ok" id="lm" role="status"></p>
+<div class="btns"><button id="la" type="button">Add to ledger</button><button id="lc" class="alt" type="button">Copy CSV</button><button id="lb" class="alt" type="button">Copy backup</button><button class="alt back" type="button">Back</button></div>
+<p class="hint" id="lsum" style="margin-top:14px"></p><div id="list"></div>
+</section>
+
+<section id="fo" hidden>
+<h2>Signed agreement</h2>
 <pre id="txt"></pre>
-<div class="btns"><button id="cp" type="button">Copy to send</button><button id="pr" type="button" class="alt">Print or save PDF</button><button id="ed" type="button" class="alt">Edit</button></div>
+<h2>Next steps</h2>
+<ol class="steps"><li>Buyer: send the full agreement, including the ADMIN CODE line, to the seller and to a server admin.</li><li>Both players: copy the pages below into your own book and quill and sign it in game. The in-game signature shows your real username.</li><li>Admin: paste it into the deal ledger on the home page, then update the land claim.</li></ol>
+<h2>Minecraft book and quill</h2>
+<p class="hint">One block per page, each under 256 characters. Copy a page, then paste it into the matching book page.</p>
+<div id="pages"></div>
+<div class="btns"><button id="cp" type="button">Copy to send</button><a id="adm" class="btnlink" target="_blank" rel="noopener" hidden>Open admin chat</a><button id="pr" class="alt" type="button">Download PDF</button><button class="alt back" type="button">Done</button></div>
 <p class="ok" id="ok" role="status"></p>
-</div>
-</div>
-</main>
+</section>
+</div></main>
 <script>
 (function(){
 var $=function(i){return document.getElementById(i)};
-var req=["sn","sl","sid","x","y","z","x2","y2","z2","ss","bn","bl","bid","bs"];
-var all=req.concat(["dim","price"]);
-function dims(){var r=[];[["x","x2"],["y","y2"],["z","z2"]].forEach(function(p){var a=$(p[0]).value,b=$(p[1]).value;r.push(a===""||b===""?null:Math.abs(+a-+b)+1)});return r}
-function area(){var d=dims(),e=$("area");if(d.indexOf(null)>-1){e.textContent="Use two opposite corners of the claim. The size is worked out for you.";return}e.textContent="Size: "+d[0]+" x "+d[1]+" x "+d[2]+" blocks ("+(d[0]*d[1]*d[2]).toLocaleString()+" total)"}
+var O=null;
+var SF=["sn","sl","sid","x","y","z","x2","y2","z2","ss"],BF=["bn","bl","bid","bs"];
+function show(id){["home","sv","so","bv","fo","ad"].forEach(function(i){$(i).hidden=i!==id});window.scrollTo(0,0)}
+function g(i){return $(i).value.trim()}
+function today(){var d=new Date(),z=function(n){return (n<10?"0":"")+n};return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
+function sz(a,b){return [0,1,2].map(function(i){return Math.abs(a[i]-b[i])+1})}
+function area(){var p=[["x","x2"],["y","y2"],["z","z2"]],d=[],e=$("area");
+p.forEach(function(q){var a=$(q[0]).value,b=$(q[1]).value;d.push(a===""||b===""?null:Math.abs(+a-+b)+1)});
+e.textContent=d.indexOf(null)>-1?"Use two opposite corners of the claim. The size is worked out for you.":"Size: "+d.join(" x ")+" blocks ("+(d[0]*d[1]*d[2]).toLocaleString()+" total)"}
 ["x","y","z","x2","y2","z2"].forEach(function(i){$(i).addEventListener("input",area)});
-function build(){
-var d=new Date().toISOString().slice(0,10);
-var v=function(i){return $(i).value.trim()};
-var L=["OWNERSHIP AND LAND TRANSFER AGREEMENT","","By signing this document, the seller grants the bearer the right to own,","modify, build on and inhabit this property in the jurisdiction of the","Farzaneh government. The bearer agrees to follow all local and federal","laws set by the Farzaneh government.","",
-"SELLER","Name: "+v("sn")+" "+v("sl"),"Player ID: "+v("sid"),
-"Land corner 1 (x y z): "+v("x")+" "+v("y")+" "+v("z"),"Land corner 2 (x y z): "+v("x2")+" "+v("y2")+" "+v("z2"),"Dimension: "+$("dim").value,"Land size: "+dims().join(" x ")+" blocks"];
-if(v("price"))L.push("Price/payment: "+v("price"));
-L.push("Signature: "+v("ss"),"","BEARER","Name: "+v("bn")+" "+v("bl"),"Player ID: "+v("bid"),"Signature: "+v("bs"),"","Date: "+d);
-return L.join("\n");}
-$("go").onclick=function(){
-var bad=0;
-all.forEach(function(i){$(i).classList.remove("bad")});
-req.forEach(function(i){if(!$(i).value.trim()){$(i).classList.add("bad");bad++}});
-var m=$("msg");
-if(bad){m.textContent="Fill in the "+bad+" highlighted field"+(bad>1?"s":"")+".";return}
-if(!$("ag").checked){m.textContent="Tick the confirmation box to continue.";return}
-m.textContent="";
-$("txt").textContent=build();
-$("form").style.display="none";$("out").style.display="block";$("ok").textContent="";
-window.scrollTo(0,0);};
-$("ed").onclick=function(){$("out").style.display="none";$("form").style.display="block"};
-$("rs").onclick=function(){all.forEach(function(i){var e=$(i);if(e.tagName!=="SELECT")e.value="";e.classList.remove("bad")});$("ag").checked=false;$("msg").textContent="";area()};
-$("cp").onclick=function(){
-var t=$("txt").textContent;
-function done(){$("ok").textContent="Copied. Paste it into Discord or chat."}
-try{navigator.clipboard.writeText(t).then(done,fallback)}catch(e){fallback()}
-function fallback(){try{var r=document.createRange();r.selectNodeContents($("txt"));var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand("copy");done()}catch(e){$("ok").textContent="Press and hold the text to copy it."}}};
-$("pr").onclick=function(){try{window.print()}catch(e){$("ok").textContent="Printing is not available here. Use Copy instead."}};
+function chk(ids,ag,mid){var n=0;ids.forEach(function(i){var e=$(i);e.classList.remove("bad");if(!g(i)){e.classList.add("bad");n++}});
+var m=$(mid);if(n){m.textContent="Fill in the "+n+" highlighted field"+(n>1?"s":"")+".";return false}
+if(!$(ag).checked){m.textContent="Tick the confirmation box to continue.";return false}m.textContent="";return true}
+function land(o){return "Corner 1: "+o.a.join(" ")+"\nCorner 2: "+o.b.join(" ")+"\nDimension: "+o.dim+"\nSize: "+sz(o.a,o.b).join(" x ")+" blocks"}
+var ADMIN_TELEGRAM="";
+function addDays(s,k){var p=s.split("-");return new Date(Date.UTC(+p[0],+p[1]-1,+p[2]+k)).toISOString().slice(0,10)}
+function sched(o){if(!o.amt)return[];if(o.plan!=="inst")return[{d:o.first,a:o.amt}];var b=Math.floor(o.amt/o.n),r=o.amt-b*o.n,out=[];for(var i=0;i<o.n;i++)out.push({d:addDays(o.first,i*o.gap),a:b+(i<r?1:0)});return out}
+function xtxt(o){return "Land transfers: "+(o.xfer==="paid"?"after the final payment":"when the agreement is accepted")}
+function payTxt(o){if(!o.amt)return "Total price: none (free transfer)\n"+xtxt(o);var u=o.unit,L=["Total price: "+o.amt+" "+u];
+if(o.plan!=="inst")L.push("Due: "+o.first);else{L.push("Plan: "+o.n+" payments, every "+o.gap+" days");sched(o).forEach(function(p,i){L.push((i+1)+". "+p.d+"  "+p.a+" "+u)})}
+L.push(xtxt(o));return L.join("\n")}
+function payPage(o){if(!o.amt)return "PAYMENT\nFree transfer\n"+xtxt(o);var s=sched(o),f=s[0].a,l=s[s.length-1].a;
+return "PAYMENT\n"+o.amt+" "+o.unit+"\n"+(o.plan!=="inst"?"Due "+o.first:o.n+" payments of "+(f===l?f:l+"-"+f)+" "+o.unit+", every "+o.gap+" days\nFirst "+o.first+"\nLast "+s[s.length-1].d)+"\n"+xtxt(o)}
+function curO(){return{amt:Math.floor(+g("amt"))||0,unit:g("unit"),plan:$("plan").value,first:g("first"),n:Math.floor(+g("npay"))||0,gap:Math.floor(+g("gap"))||0,xfer:$("xfer").value}}
+function payErr(){var o=curO();if(g("amt")===""||+g("amt")===0)return "";
+if(!(+g("amt")>=1)||+g("amt")%1)return "The price must be a whole number.";
+if(!o.unit)return "Add the currency or item, for example diamonds.";
+if(!o.first)return "Pick the payment due date.";
+if(o.first<today())return "The due date cannot be in the past.";
+if(o.plan==="inst"){if(o.n<2||o.n>30)return "Use between 2 and 30 payments.";if(o.gap<1||o.gap>90)return "Days between payments must be 1 to 90.";if(o.amt<o.n)return "The price must be at least the number of payments."}
+return ""}
+function prev(){var o=curO(),e=payErr();$("iw").hidden=o.plan!=="inst";$("lfirst").textContent=o.plan==="inst"?"First payment due":"Payment due date";
+$("prev").textContent=!o.amt?"No payment set: this will be a free transfer.":e?e:payTxt(o)}
+["amt","unit","plan","first","npay","gap","xfer"].forEach(function(i){$(i).addEventListener("input",prev);$(i).addEventListener("change",prev)});
+$("first").min=today();prev();
+function enc(x){return btoa(unescape(encodeURIComponent(JSON.stringify(x))))}
+function clean(o){["sn","sl","sid","dim","ss","d","unit","first","plan","xfer"].forEach(function(k){o[k]=String(o[k]==null?"":o[k]).slice(0,60)});
+o.amt=Math.floor(+o.amt)||0;o.n=Math.floor(+o.n)||1;o.gap=Math.floor(+o.gap)||0;
+[o.a,o.b].forEach(function(p){if(!Array.isArray(p)||p.length!==3||!p.every(function(n){return typeof n==="number"&&isFinite(n)}))throw 0});
+if(!o.sn||!o.sid||!o.ss)throw 0;o.xfer=o.xfer==="paid"?"paid":"now";
+if(o.amt>0){if(!/^\d{4}-\d{2}-\d{2}$/.test(o.first)||!o.unit)throw 0;if(o.plan!=="inst")o.plan="single";else if(o.n<2||o.n>30||o.gap<1||o.gap>90)throw 0}
+return o}
+if(ADMIN_TELEGRAM){var ad=$("adm");ad.href="https://t.me/"+ADMIN_TELEGRAM;ad.hidden=false;ad.onclick=function(){cpy($("txt").textContent,null,"",$("ok"))}}
+
+var KEY="landdeals",mem={};
+function load(){try{var v=localStorage.getItem(KEY);return v?JSON.parse(v):mem}catch(e){return mem}}
+var D=load();
+function save(){mem=D;try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function render(){var L=$("list");L.textContent="";var ids=Object.keys(D).sort(function(a,b){return D[b].added<D[a].added?-1:1}),od=0,t=today();
+ids.forEach(function(id){var d=D[id],o=d.o,s=sched(o),c=el("div","card"),done=0;
+c.appendChild(el("strong","","Deal "+id+": "+o.sn+" "+o.sl+" ("+o.sid+") to "+d.b.n+" ("+d.b.id+")"));
+c.appendChild(el("pre","",land(o)+"\n"+xtxt(o)+"\nAccepted: "+d.b.d));
+s.forEach(function(p,i){var lb=el("label","pay"),cb=document.createElement("input");cb.type="checkbox";cb.checked=!!d.paid[i];if(cb.checked)done++;
+var late=!cb.checked&&p.d<t;if(late)od++;
+lb.appendChild(cb);lb.appendChild(el("span",late?"late":"",p.d+"  "+p.a+" "+o.unit+(late?"  OVERDUE":"")));
+cb.onchange=function(){d.paid[i]=cb.checked;save();render()};c.appendChild(lb)});
+c.appendChild(el("p","hint",s.length?"Paid "+done+" of "+s.length+" payments":"No payments (free transfer)"));
+var x=el("button","alt","Remove"),arm=false;x.type="button";
+x.onclick=function(){if(!arm){arm=true;x.textContent="Tap again to remove";return}delete D[id];save();render()};
+c.appendChild(x);L.appendChild(c)});
+$("lsum").textContent=ids.length?ids.length+" deal"+(ids.length>1?"s":"")+" tracked, "+od+" overdue payment"+(od===1?"":"s")+".":"No deals yet. Paste agreements above."}
+$("b-a").onclick=function(){render();show("ad")};
+$("la").onclick=function(){var re=/LANDDEAL:([A-Za-z0-9+\/=]+)/g,m,add=0,dup=0,bad=0,t=$("lp").value;
+while((m=re.exec(t))){try{var x=JSON.parse(decodeURIComponent(escape(atob(m[1])))),o=clean(x.o),b=x.b||{};
+["n","id","s","d"].forEach(function(k){b[k]=String(b[k]||"").slice(0,60)});
+var id=String(x.id||"").replace(/[^A-Za-z0-9]/g,"").slice(0,12);if(!id||!b.n)throw 0;
+if(D[id])dup++;else{D[id]={o:o,b:b,paid:Array.isArray(x.p)?x.p.slice(0,30).map(Boolean):[],added:today()};add++}}catch(e){bad++}}
+save();$("lm").textContent=(add+dup+bad)?"Added "+add+", already tracked "+dup+(bad?", invalid "+bad:"")+".":"No agreement code found. Paste the full agreement message.";$("lp").value="";render()};
+$("lc").onclick=function(){var Q=String.fromCharCode(34),q=function(f){return Q+String(f).split(Q).join(Q+Q)+Q};
+var rows=[["Deal ID","Accepted","Seller","Seller ID","Buyer","Buyer ID","Dimension","Corner 1","Corner 2","Size","Total","Unit","Plan","Transfer","Paid","Payments","Next due"]];
+Object.keys(D).forEach(function(id){var d=D[id],o=d.o,s=sched(o),pd=s.filter(function(p,i){return d.paid[i]}).length,nx=s.filter(function(p,i){return !d.paid[i]})[0];
+rows.push([id,d.b.d,o.sn+" "+o.sl,o.sid,d.b.n,d.b.id,o.dim,o.a.join(" "),o.b.join(" "),sz(o.a,o.b).join("x"),o.amt,o.unit,o.plan,o.xfer,pd,s.length,nx?nx.d:""])});
+cpy(rows.map(function(r){return r.map(q).join(",")}).join("\n"),null,"",$("lm"))};
+$("lb").onclick=function(){cpy(Object.keys(D).map(function(id){return "LANDDEAL:"+enc({o:D[id].o,b:D[id].b,id:id,p:D[id].paid})}).join("\n"),null,"",$("lm"))};
+function sell(o){return "Name: "+o.sn+" "+o.sl+"\nPlayer ID: "+o.sid+"\n"+land(o)+"\nSigned: "+o.ss+" ("+o.d+")"}
+function hash(s){var a=0xdeadbeef,b=0x41c6ce57,c;for(var i=0;i<s.length;i++){c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}
+a=Math.imul(a^(a>>>16),2246822507)^Math.imul(b^(b>>>13),3266489909);b=Math.imul(b^(b>>>16),2246822507)^Math.imul(a^(a>>>13),3266489909);
+return (4294967296*(2097151&b)+(a>>>0)).toString(36).toUpperCase().slice(0,8)}
+function cpy(t,b,n,okEl){function ok(){if(b){b.textContent="Copied!";setTimeout(function(){b.textContent=n},1500)}if(okEl)okEl.textContent="Copied."}
+function fb(){try{var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");document.body.removeChild(a);ok()}catch(e){if(okEl)okEl.textContent="Press and hold the text to copy it."}}
+try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}}
+document.querySelectorAll(".back").forEach(function(b){b.onclick=function(){show("home")}});
+$("b-s").onclick=function(){show("sv")};
+$("b-b").onclick=function(){show("bv")};
+
+$("mk").onclick=function(){
+if(!chk(SF,"ag1","m1"))return;var pe=payErr();if(pe){$("m1").textContent=pe;return}
+O=Object.assign({sn:g("sn"),sl:g("sl"),sid:g("sid"),a:[+g("x"),+g("y"),+g("z")],b:[+g("x2"),+g("y2"),+g("z2")],dim:$("dim").value,ss:g("ss"),d:today()},curO());
+var code="LANDOFFER:"+btoa(unescape(encodeURIComponent(JSON.stringify(O))));
+$("ocode").textContent="LAND SALE OFFER from "+O.sn+" "+O.sl+" ("+O.sid+")\n"+land(O)+"\n"+payTxt(O)+"\n\nBuyer: open "+location.href.split("#")[0]+" , choose \"I'm the buyer\" and paste this code:\n"+code;
+$("ok1").textContent="";show("so")};
+$("co").onclick=function(){cpy($("ocode").textContent,null,"",$("ok1"))};
+
+$("ld").onclick=function(){
+var m=$("paste").value.match(/LANDOFFER:([A-Za-z0-9+\/=]+)/),e=$("m2");
+try{if(!m)throw 0;var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+o=clean(o);
+O=o;$("bsum").textContent=sell(O)+"\n\nPAYMENT\n"+payTxt(O);$("bf").hidden=false;e.textContent=""}
+catch(x){e.textContent="That does not look like a valid offer. Paste the whole message from the seller."}};
+
+var PAGES=[];
+$("ac").onclick=function(){
+if(!O||!chk(BF,"ag2","m3"))return;
+var B={n:g("bn")+" "+g("bl"),id:g("bid"),s:g("bs"),d:today()};
+var id=hash(JSON.stringify([O,B]));
+var terms="The seller grants the bearer the right to own, modify, build on and inhabit this property in the jurisdiction of the Farzaneh government. The bearer agrees to follow all local and federal laws set by the Farzaneh government and to pay the price on the dates under PAYMENT.";
+$("txt").textContent="OWNERSHIP AND LAND TRANSFER AGREEMENT\n\n"+terms+"\n\nSELLER\n"+sell(O)+"\n\nPAYMENT\n"+payTxt(O)+"\n\nBEARER\nName: "+B.n+"\nPlayer ID: "+B.id+"\nSigned: "+B.s+" ("+B.d+")\n\nDeal ID: "+id+"\n\nADMIN CODE (do not edit):\nLANDDEAL:"+enc({o:O,b:B,id:id});
+var s=["OWNERSHIP AND LAND TRANSFER AGREEMENT\n\nThe seller grants the bearer the right to own, modify, build on and inhabit this land in Farzaneh jurisdiction. The bearer follows all local and federal laws and pays on the dates below.",
+"SELLER\n"+O.sn+" "+O.sl+"\nID: "+O.sid+"\nCorner 1: "+O.a.join(" ")+"\nCorner 2: "+O.b.join(" ")+"\n"+O.dim+"\nSize: "+sz(O.a,O.b).join("x")+"\nSigned: "+O.ss,
+payPage(O),
+"BEARER\n"+B.n+"\nID: "+B.id+"\nSigned: "+B.s+"\nDate: "+B.d+"\nDeal ID: "+id];
+var out=[];s.forEach(function(t){while(t.length>250){var k=t.lastIndexOf(" ",250);if(k<1)k=250;out.push(t.slice(0,k));t=t.slice(k).trim()}out.push(t)});
+var box=$("pages");box.textContent="";
+out.forEach(function(t,i){var w=document.createElement("div");w.style.margin="10px 0";var p=document.createElement("pre");p.textContent=t;
+var b=document.createElement("button"),n="Copy page "+(i+1)+" ("+t.length+"/256)";b.type="button";b.className="alt";b.style.marginTop="6px";b.textContent=n;
+b.onclick=function(){cpy(t,b,n)};w.appendChild(p);w.appendChild(b);box.appendChild(w)});
+$("ok").textContent=$("txt").textContent.length>4000?"Long message: Telegram may need it sent in two parts.":"";show("fo")};
+$("cp").onclick=function(){cpy($("txt").textContent,null,"",$("ok"))};
+$("pr").onclick=function(){
+try{var J=window.jspdf.jsPDF,d=new J({unit:"pt",format:"a4"});d.setFont("courier","normal");d.setFontSize(11);
+var ls=d.splitTextToSize($("txt").textContent.split("\n\nADMIN CODE")[0],500),y=60;
+ls.forEach(function(l){if(y>780){d.addPage();y=60}d.text(l,48,y);y+=16});
+d.save("land-transfer-agreement.pdf");$("ok").textContent="PDF downloaded."}
+catch(e){$("ok").textContent="PDF is not available here. Use Copy to send instead."}};
 })();
 </script>
 </body>
