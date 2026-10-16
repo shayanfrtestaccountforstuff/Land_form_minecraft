@@ -61,6 +61,8 @@ a.btnlink{display:inline-flex;align-items:center;min-height:46px;padding:0 18px;
 <button class="choice" id="b-s" type="button">I'm the seller<small>Step 1: enter your details and the land, then send the offer to the buyer.</small></button>
 <button class="choice alt" id="b-b" type="button">I'm the buyer (bearer)<small>Step 2: paste the seller's offer, add your details and accept.</small></button>
 <button class="choice alt" id="b-a" type="button">Admin: deal ledger<small>Track every purchase and its payments.</small></button>
+<button class="choice" id="b-k" type="button">Claim unclaimed land<small>Uninhabited land, wilderness or an abandoned building. The government must approve it.</small></button>
+<button class="choice alt" id="b-g" type="button">Government: review a claim<small>For the server government only.</small></button>
 </section>
 
 <section id="sv" hidden>
@@ -121,13 +123,77 @@ a.btnlink{display:inline-flex;align-items:center;min-height:46px;padding:0 18px;
 </div>
 </section>
 
+<section id="kv" hidden>
+<h2>Claim unclaimed land</h2>
+<p class="hint">Your claim is only valid once the government signs it. You do not own the land until you receive the approved certificate.</p>
+<div class="row"><div><label for="kn">First name</label><input id="kn" maxlength="30" autocomplete="off"></div><div><label for="kl">Last name</label><input id="kl" maxlength="30" autocomplete="off"></div></div>
+<label for="kid">Player ID</label><input id="kid" maxlength="30" autocomplete="off" placeholder="In-game username">
+<label for="kt">What are you claiming?</label>
+<select id="kt"><option>Uninhabited land</option><option>Wilderness land</option><option>Abandoned building</option></select>
+<label>Corner 1 (x, y, z)</label>
+<div class="xyz"><input id="kx" type="number" inputmode="numeric" placeholder="x1" aria-label="corner 1 x"><input id="ky" type="number" inputmode="numeric" placeholder="y1" aria-label="corner 1 y"><input id="kz" type="number" inputmode="numeric" placeholder="z1" aria-label="corner 1 z"></div>
+<label>Corner 2 (x, y, z)</label>
+<div class="xyz"><input id="kx2" type="number" inputmode="numeric" placeholder="x2" aria-label="corner 2 x"><input id="ky2" type="number" inputmode="numeric" placeholder="y2" aria-label="corner 2 y"><input id="kz2" type="number" inputmode="numeric" placeholder="z2" aria-label="corner 2 z"></div>
+<label for="kdim">Dimension</label>
+<select id="kdim"><option>Overworld</option><option>Nether</option><option>The End</option></select>
+<label for="kd">Why is it unclaimed? What will you use it for?</label>
+<textarea id="kd" rows="3" maxlength="140" placeholder="Short description (140 characters)"></textarea>
+<label for="ks">Claimant signature</label><input id="ks" class="sign" maxlength="40" placeholder="Type your full name" autocomplete="off">
+<label class="agree"><input type="checkbox" id="kag"><span>I confirm this land or building is unclaimed, I will follow all local and federal laws, and the government may approve or reject my claim.</span></label>
+<p class="msg" id="km1" role="alert"></p>
+<div class="btns"><button id="kmk" type="button">Create claim request</button><button class="alt back" type="button">Back</button></div>
+</section>
+
+<section id="kq" hidden>
+<h2>Claim request ready</h2>
+<p class="hint">Send this whole message to the government on Telegram. Keep the code line, the government pastes it into the form.</p>
+<pre id="kcode"></pre>
+<div class="btns"><button id="kcpo" type="button">Copy request</button><button class="alt back" type="button">Done</button></div>
+<p class="ok" id="kok1" role="status"></p>
+</section>
+
+<section id="gv" hidden>
+<h2>Government review</h2>
+<p class="hint">Government use only. Paste a claim request, then approve or reject it with your signature.</p>
+<textarea id="kpaste" rows="4" placeholder="Paste the message that contains LANDCLAIM:..."></textarea>
+<p class="msg" id="km2" role="alert"></p>
+<div class="btns"><button id="kld" type="button">Load claim</button><button class="alt back" type="button">Back</button></div>
+<div id="gbox" hidden>
+<h2>Claim request</h2>
+<pre id="gsum"></pre>
+<h2>Government decision</h2>
+<label for="gdec">Decision</label>
+<select id="gdec"><option value="approved">Approve</option><option value="rejected">Reject</option></select>
+<label for="gnote">Conditions or reason (required if rejecting)</label>
+<textarea id="gnote" rows="2" maxlength="140" placeholder="Optional notes (140 characters)"></textarea>
+<label for="gn">Representative name</label><input id="gn" maxlength="40" autocomplete="off">
+<label for="gs">Government signature</label><input id="gs" class="sign" maxlength="40" placeholder="Type your full name" autocomplete="off">
+<label class="agree"><input type="checkbox" id="gag"><span>I sign this decision on behalf of the Farzaneh government.</span></label>
+<p class="msg" id="km3" role="alert"></p>
+<div class="btns"><button id="gdo" type="button">Issue decision</button></div>
+</div>
+</section>
+
+<section id="kf" hidden>
+<h2>Signed claim decision</h2>
+<pre id="ktxt"></pre>
+<h2>Next steps</h2>
+<ol class="steps"><li>Government: send the full text, including the ADMIN CODE line, to the claimant.</li><li>Claimant: copy the pages below into your own book and quill and sign it in game.</li><li>Government: paste it into the deal ledger on the home page to record the claim, then update the land claim.</li></ol>
+<h2>Minecraft book and quill</h2>
+<p class="hint">One block per page, each under 256 characters.</p>
+<div id="kpages"></div>
+<div class="btns"><button id="kcp" type="button">Copy to send</button><button id="kpr" class="alt" type="button">Download PDF</button><button class="alt back" type="button">Done</button></div>
+<p class="ok" id="kok" role="status"></p>
+</section>
+
 <section id="ad" hidden>
 <h2>Admin deal ledger</h2>
 <p class="hint">Paste final agreements, one or many. Deals are saved in this browser only, so keep the Telegram messages as your master record and use Copy backup now and then.</p>
 <textarea id="lp" rows="4" placeholder="Paste agreements containing LANDDEAL:..."></textarea>
 <p class="ok" id="lm" role="status"></p>
-<div class="btns"><button id="la" type="button">Add to ledger</button><button id="lc" class="alt" type="button">Copy CSV</button><button id="lb" class="alt" type="button">Copy backup</button><button class="alt back" type="button">Back</button></div>
+<div class="btns"><button id="la" type="button">Add to ledger</button><button id="lc" class="alt" type="button">Copy CSV</button><button id="lb" class="alt" type="button">Copy backup</button><button id="kcsv" class="alt" type="button">Claims CSV</button><button class="alt back" type="button">Back</button></div>
 <p class="hint" id="lsum" style="margin-top:14px"></p><div id="list"></div>
+<h2>Land claims</h2><p class="hint" id="csum"></p><div id="clist"></div>
 </section>
 
 <section id="fo" hidden>
@@ -147,7 +213,7 @@ a.btnlink{display:inline-flex;align-items:center;min-height:46px;padding:0 18px;
 var $=function(i){return document.getElementById(i)};
 var O=null;
 var SF=["sn","sl","sid","x","y","z","x2","y2","z2","ss"],BF=["bn","bl","bid","bs"];
-function show(id){["home","sv","so","bv","fo","ad"].forEach(function(i){$(i).hidden=i!==id});window.scrollTo(0,0)}
+function show(id){["home","sv","so","bv","fo","ad","kv","kq","gv","kf"].forEach(function(i){$(i).hidden=i!==id});window.scrollTo(0,0)}
 function g(i){return $(i).value.trim()}
 function today(){var d=new Date(),z=function(n){return (n<10?"0":"")+n};return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
 function sz(a,b){return [0,1,2].map(function(i){return Math.abs(a[i]-b[i])+1})}
@@ -270,6 +336,72 @@ var ls=d.splitTextToSize($("txt").textContent.split("\n\nADMIN CODE")[0],500),y=
 ls.forEach(function(l){if(y>780){d.addPage();y=60}d.text(l,48,y);y+=16});
 d.save("land-transfer-agreement.pdf");$("ok").textContent="PDF downloaded."}
 catch(e){$("ok").textContent="PDF is not available here. Use Copy to send instead."}};
+
+var C=null,CT=["Uninhabited land","Wilderness land","Abandoned building"];
+var KF=["kn","kl","kid","kx","ky","kz","kx2","ky2","kz2","kd","ks"];
+function pt(p){if(!Array.isArray(p)||p.length!==3||!p.every(function(n){return typeof n==="number"&&isFinite(n)}))throw 0}
+function kland(c){return "Type: "+c.t+"\nCorner 1: "+c.a.join(" ")+"\nCorner 2: "+c.b.join(" ")+"\nDimension: "+c.dim+"\nSize: "+sz(c.a,c.b).join(" x ")+" blocks\nReason: "+c.r}
+function kc(c){return "Name: "+c.n+" "+c.l+"\nPlayer ID: "+c.id+"\n"+kland(c)+"\nSigned: "+c.s+" ("+c.d+")"}
+function kclean(c){["n","l","id","t","dim","r","s","d"].forEach(function(k){c[k]=String(c[k]==null?"":c[k]).slice(0,k==="r"?140:60)});pt(c.a);pt(c.b);
+if(!c.n||!c.id||!c.s||!c.r)throw 0;if(CT.indexOf(c.t)<0)c.t=CT[0];return c}
+function bookInto(box,arr){var out=[];arr.forEach(function(t){while(t.length>250){var k=t.lastIndexOf(" ",250);if(k<1)k=250;out.push(t.slice(0,k));t=t.slice(k).trim()}out.push(t)});
+var B=$(box);B.textContent="";out.forEach(function(t,i){var w=el("div"),b=el("button","alt"),n="Copy page "+(i+1)+" ("+t.length+"/256)";w.style.margin="10px 0";w.appendChild(el("pre","",t));b.type="button";b.style.marginTop="6px";b.textContent=n;b.onclick=function(){cpy(t,b,n)};w.appendChild(b);B.appendChild(w)})}
+function mkpdf(t,fn,e){try{var J=window.jspdf.jsPDF,d=new J({unit:"pt",format:"a4"});d.setFont("courier","normal");d.setFontSize(11);
+var ls=d.splitTextToSize(t.split("\n\nADMIN CODE")[0],500),y=60;ls.forEach(function(l){if(y>780){d.addPage();y=60}d.text(l,48,y);y+=16});d.save(fn);e.textContent="PDF downloaded."}
+catch(x){e.textContent="PDF is not available here. Use Copy to send instead."}}
+$("b-k").onclick=function(){show("kv")};
+$("b-g").onclick=function(){show("gv")};
+$("kmk").onclick=function(){if(!chk(KF,"kag","km1"))return;
+C={n:g("kn"),l:g("kl"),id:g("kid"),t:$("kt").value,a:[+g("kx"),+g("ky"),+g("kz")],b:[+g("kx2"),+g("ky2"),+g("kz2")],dim:$("kdim").value,r:g("kd"),s:g("ks"),d:today()};
+$("kcode").textContent="LAND CLAIM REQUEST from "+C.n+" "+C.l+" ("+C.id+")\n"+kland(C)+"\n\nGovernment: open "+location.href.split("#")[0]+" , choose \"Government: review a claim\" and paste this code:\nLANDCLAIM:"+enc(C);
+$("kok1").textContent="";show("kq")};
+$("kcpo").onclick=function(){cpy($("kcode").textContent,null,"",$("kok1"))};
+$("kld").onclick=function(){var m=$("kpaste").value.match(/LANDCLAIM:([A-Za-z0-9+\/=]+)/),e=$("km2");
+try{if(!m)throw 0;C=kclean(JSON.parse(decodeURIComponent(escape(atob(m[1])))));$("gsum").textContent=kc(C);$("gbox").hidden=false;e.textContent=""}
+catch(x){e.textContent="That does not look like a valid claim request. Paste the whole message from the claimant."}};
+$("gdo").onclick=function(){if(!C)return;var m=$("km3"),rej=$("gdec").value==="rejected",bad=0;
+["gn","gs","gnote"].forEach(function(i){$(i).classList.remove("bad")});
+["gn","gs"].forEach(function(i){if(!g(i)){$(i).classList.add("bad");bad++}});
+if(bad){m.textContent="Enter your name and signature.";return}
+if(rej&&!g("gnote")){$("gnote").classList.add("bad");m.textContent="Add a reason for rejecting.";return}
+if(!$("gag").checked){m.textContent="Tick the confirmation box to continue.";return}
+m.textContent="";
+var G={n:g("gn"),s:g("gs"),dec:rej?"rejected":"approved",note:g("gnote"),d:today()},id=hash(JSON.stringify([C,G])),ap=!rej;
+$("ktxt").textContent=(ap?"LAND CLAIM CERTIFICATE":"LAND CLAIM DECISION: NOT APPROVED")+"\n\n"+(ap?"The Farzaneh government grants the claimant the right to own, modify, build on and inhabit the claimed property. The claimant agrees to follow all local and federal laws set by the Farzaneh government.":"The Farzaneh government did not approve this claim. The claimant has no rights to the property described below.")
++"\n\nCLAIMANT\n"+kc(C)+"\n\nGOVERNMENT\nDecision: "+(ap?"APPROVED":"NOT APPROVED")+"\nRepresentative: "+G.n+"\nSigned: "+G.s+" ("+G.d+")"+(G.note?"\nNotes: "+G.note:"")+"\n\nClaim ID: "+id+"\n\nADMIN CODE (do not edit):\nLANDCERT:"+enc({c:C,g:G,id:id});
+bookInto("kpages",[ap?"LAND CLAIM CERTIFICATE\n\nThe Farzaneh government grants the claimant the right to own, modify, build on and inhabit the claimed property. The claimant follows all local and federal laws.":"LAND CLAIM DECISION\n\nThis claim was NOT approved. The claimant has no rights to the property described.",
+"CLAIMANT\n"+C.n+" "+C.l+"\nID: "+C.id+"\n"+C.t+"\nCorner 1: "+C.a.join(" ")+"\nCorner 2: "+C.b.join(" ")+"\n"+C.dim+"\nSigned: "+C.s,
+"GOVERNMENT\n"+(ap?"APPROVED":"NOT APPROVED")+"\n"+G.n+"\nSigned: "+G.s+"\nDate: "+G.d+(G.note?"\n"+G.note:"")+"\nClaim ID: "+id]);
+$("kok").textContent="";show("kf")};
+$("kcp").onclick=function(){cpy($("ktxt").textContent,null,"",$("kok"))};
+$("kpr").onclick=function(){mkpdf($("ktxt").textContent,"land-claim.pdf",$("kok"))};
+
+var CK="landclaims",Cm={};
+function loadC(){try{var v=localStorage.getItem(CK);return v?JSON.parse(v):Cm}catch(e){return Cm}}
+var CD=loadC();
+function saveC(){Cm=CD;try{localStorage.setItem(CK,JSON.stringify(CD))}catch(e){}}
+function addClaims(t){var re=/LANDCERT:([A-Za-z0-9+\/=]+)/g,m,r={add:0,dup:0,bad:0};
+while((m=re.exec(t))){try{var x=JSON.parse(decodeURIComponent(escape(atob(m[1])))),c=kclean(x.c),q=x.g||{};
+["n","s","d","note"].forEach(function(k){q[k]=String(q[k]||"").slice(0,k==="note"?140:60)});q.dec=q.dec==="rejected"?"rejected":"approved";
+var id=String(x.id||"").replace(/[^A-Za-z0-9]/g,"").slice(0,12);if(!id||!q.n)throw 0;
+if(CD[id])r.dup++;else{CD[id]={c:c,g:q,added:today()};r.add++}}catch(e){r.bad++}}
+saveC();return r}
+function renderC(){var L=$("clist");L.textContent="";var ids=Object.keys(CD).sort(function(a,b){return CD[b].added<CD[a].added?-1:1}),ap=0;
+ids.forEach(function(id){var d=CD[id],ok=d.g.dec==="approved",c=el("div","card");if(ok)ap++;
+c.appendChild(el("strong","","Claim "+id+": "+d.c.n+" "+d.c.l+" ("+d.c.id+") - "+(ok?"APPROVED":"NOT APPROVED")));
+c.appendChild(el("pre","",kland(d.c)+"\nGovernment: "+d.g.n+" ("+d.g.d+")"+(d.g.note?"\nNotes: "+d.g.note:"")));
+var x=el("button","alt","Remove"),arm=false;x.type="button";
+x.onclick=function(){if(!arm){arm=true;x.textContent="Tap again to remove";return}delete CD[id];saveC();render()};c.appendChild(x);L.appendChild(c)});
+$("csum").textContent=ids.length?ids.length+" claim"+(ids.length>1?"s":"")+" recorded, "+ap+" approved.":"No claims yet. Paste claim certificates above."}
+var _rd=render;render=function(){_rd();renderC()};
+var _la=$("la").onclick;
+$("la").onclick=function(){var r=addClaims($("lp").value);_la();
+if(r.add||r.dup||r.bad){var t=$("lm").textContent;$("lm").textContent=(t.indexOf("No agreement")===0?"":t+" ")+"Claims: added "+r.add+", already tracked "+r.dup+(r.bad?", invalid "+r.bad:"")+"."}};
+$("lb").onclick=function(){var a=Object.keys(D).map(function(id){return "LANDDEAL:"+enc({o:D[id].o,b:D[id].b,id:id,p:D[id].paid})}).concat(Object.keys(CD).map(function(id){return "LANDCERT:"+enc({c:CD[id].c,g:CD[id].g,id:id})}));cpy(a.join("\n"),null,"",$("lm"))};
+$("kcsv").onclick=function(){var Q=String.fromCharCode(34),q=function(f){return Q+String(f).split(Q).join(Q+Q)+Q};
+var rows=[["Claim ID","Decision","Date","Claimant","Player ID","Type","Dimension","Corner 1","Corner 2","Size","Reason","Government","Notes"]];
+Object.keys(CD).forEach(function(id){var d=CD[id],c=d.c;rows.push([id,d.g.dec,d.g.d,c.n+" "+c.l,c.id,c.t,c.dim,c.a.join(" "),c.b.join(" "),sz(c.a,c.b).join("x"),c.r,d.g.n,d.g.note])});
+cpy(rows.map(function(r){return r.map(q).join(",")}).join("\n"),null,"",$("lm"))};
 })();
 </script>
 </body>
